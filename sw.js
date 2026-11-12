@@ -1,7 +1,7 @@
 // オフライン対応。
 // ネットにつながっているときは常に最新のファイルを取りに行き（取れたらキャッシュも更新）、
 // つながらないときだけキャッシュを使う。これで更新がすぐ反映される。
-const VERSION = 'v4';
+const VERSION = 'v5';
 const CACHE = `hebrew-app-${VERSION}`;
 const FILES = [
   './',
@@ -12,6 +12,7 @@ const FILES = [
   './js/store.js',
   './js/speech.js',
   './js/writing.js',
+  './js/lesson.js',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',

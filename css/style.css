@@ -18,6 +18,13 @@
   --pad-guide: rgba(47, 91, 211, 0.14);
   --radius: 18px;
   --shadow: 0 2px 10px rgba(20, 30, 60, 0.07);
+  /* 学習量・習熟度の濃淡（青1色の明→暗） */
+  --seq-0: #eef1f8;
+  --seq-1: #bfd0f8;
+  --seq-2: #7f9de9;
+  --seq-3: #4570dc;
+  --seq-4: #1f3f99;
+  --seq-ink-dark: #ffffff; /* 濃いマスの上の文字色 */
   --he-font: "Arial Hebrew", "Noto Sans Hebrew", "DejaVu Sans", "Times New Roman", sans-serif;
   color-scheme: light dark;
 }
@@ -40,6 +47,12 @@
     --pad-line: #2c3240;
     --pad-guide: rgba(109, 147, 255, 0.2);
     --shadow: none;
+    --seq-0: #252b37;
+    --seq-1: #2a3a63;
+    --seq-2: #3557a8;
+    --seq-3: #5a85ee;
+    --seq-4: #a9c2ff;
+    --seq-ink-dark: #0d1220;
   }
 }
 
@@ -272,3 +285,85 @@ input[type=range] { width: 200px; accent-color: var(--primary); }
   .quiz-glyph { font-size: 100px; }
   .option-word { font-size: 30px; }
 }
+
+/* ---------- 今日のレッスン ---------- */
+.hero { padding: 4px 0 4px; }
+.hero-he { font-size: 48px; }
+.lesson-card {
+  background: var(--surface); border-radius: 24px; padding: 22px; box-shadow: var(--shadow);
+  border: 2px solid color-mix(in srgb, var(--primary) 30%, transparent); margin: 8px 0 16px;
+}
+.lesson-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.lesson-label { font-size: 24px; font-weight: 800; }
+.goal { min-width: 180px; }
+.goal-num { font-size: 26px; font-weight: 700; text-align: right; }
+.goal-num small { font-size: 15px; color: var(--muted); font-weight: 600; }
+.goal-label { font-size: 13px; text-align: right; margin-top: 4px; }
+.lesson-chips { list-style: none; padding: 0; margin: 16px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.lesson-chip { display: flex; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 14px; padding: 10px 12px; border: 2px solid transparent; }
+.lesson-chip.next { border-color: var(--primary); }
+.lesson-chip.is-done { opacity: 0.65; }
+.chip-icon { width: 36px; height: 36px; flex: none; border-radius: 10px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 20px; font-family: var(--he-font); }
+.lesson-chip.is-done .chip-icon { background: var(--good); color: #fff; font-weight: 700; }
+.chip-title { display: block; font-weight: 700; font-size: 15px; }
+.chip-desc { display: block; font-size: 14px; color: var(--muted); }
+.chip-desc .he { font-size: 18px; letter-spacing: 4px; }
+.btn.big { width: 100%; min-height: 56px; font-size: 19px; }
+.linklike { background: none; border: none; color: var(--primary); font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
+.step-list { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 10px; }
+.step-row { display: flex; align-items: center; gap: 14px; background: var(--surface); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.step-num { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.step-row.is-done .step-num { background: var(--good); color: #fff; }
+.step-text { flex: 1; display: flex; flex-direction: column; }
+.step-title { font-weight: 700; font-size: 18px; }
+.step-desc .he { font-size: 22px; letter-spacing: 4px; }
+.small-done { padding: 16px 0; }
+.panel { background: var(--surface); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); margin: 14px 0; }
+.panel h3 { margin-top: 0; }
+.select { font: inherit; min-height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 0 10px; }
+
+/* ---------- 記録 ---------- */
+.cal-wrap { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.cal-days { display: grid; grid-template-rows: repeat(7, 1fr); gap: 4px; font-size: 11px; color: var(--muted); }
+.cal-days span { line-height: 1; align-self: center; }
+.cal { display: grid; grid-template-rows: repeat(7, 22px); grid-auto-columns: 22px; gap: 4px; }
+.cal-cell { width: 22px; height: 22px; border-radius: 5px; border: none; padding: 0; background: var(--seq-0); cursor: pointer; display: inline-block; position: relative; vertical-align: middle; }
+.cal-cell.lv1 { background: var(--seq-1); }
+.cal-cell.lv2 { background: var(--seq-2); }
+.cal-cell.lv3 { background: var(--seq-3); }
+.cal-cell.lv4 { background: var(--seq-4); }
+.cal-cell.lvx { background: transparent; cursor: default; }
+.cal-cell.today { outline: 2px solid var(--text); outline-offset: 1px; }
+.cal-cell.lesson::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: var(--surface); }
+.legend { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.legend .cal-cell { width: 16px; height: 16px; cursor: default; }
+.legend .cal-cell.lesson::after { inset: 5px; }
+.legend-gap { width: 12px; }
+.swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.swatch.m0, .mastery-cell.m0, .stack-seg.m0 { background: var(--seq-0); }
+.swatch.m0 { box-shadow: inset 0 0 0 1px var(--border); }
+.swatch.m1, .mastery-cell.m1, .stack-seg.m1 { background: var(--seq-1); }
+.swatch.m2, .mastery-cell.m2, .stack-seg.m2 { background: var(--seq-3); }
+.swatch.m3, .mastery-cell.m3, .stack-seg.m3 { background: var(--seq-4); }
+.chart-detail { background: var(--surface-2); border-radius: 12px; padding: 10px 14px; font-size: 15px; min-height: 44px; margin: 14px 0; }
+
+.bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; height: 200px; }
+.bar-col { display: grid; grid-template-rows: 20px 1fr 22px; justify-items: center; background: none; border: none; padding: 0; cursor: pointer; font: inherit; color: var(--text); }
+.bar-val { font-size: 13px; font-weight: 600; align-self: end; }
+.bar-track { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; border-bottom: 1px solid var(--border); }
+.bar { width: 60%; max-width: 44px; background: var(--seq-3); border-radius: 4px 4px 0 0; }
+.goal-mark { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--muted); pointer-events: none; }
+.bar-label { font-size: 13px; color: var(--muted); align-self: center; }
+.goal-swatch { width: 18px; border-top: 1px dashed var(--muted); display: inline-block; }
+
+.mastery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.mastery-cell { height: 52px; border-radius: 10px; border: none; font-size: 28px; color: var(--text); cursor: pointer; }
+.mastery-cell.m0 { box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); }
+.mastery-cell.m2, .mastery-cell.m3 { color: var(--seq-ink-dark); }
+.stack { display: flex; gap: 2px; height: 28px; border-radius: 6px; overflow: hidden; }
+.stack-seg { min-width: 6px; }
+.stack-seg.m0 { box-shadow: inset 0 0 0 1px var(--border); }
+.weak-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.weak-list li { background: var(--surface-2); border-radius: 10px; padding: 8px 12px; }
+.weak-he { font-size: 24px; }
+.tabbar a { font-size: 11px; }
