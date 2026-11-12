@@ -1,0 +1,17 @@
+{
+  "name": "アレフベート — ヘブライ語学習",
+  "short_name": "アレフベート",
+  "description": "iPadで学ぶヘブライ語：文字・単語カード・クイズ・Apple Pencilの書き取り",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f6fa",
+  "theme_color": "#2f5bd3",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
