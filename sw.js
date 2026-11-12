@@ -1,6 +1,6 @@
 // オフライン対応: アプリの全ファイルを事前にキャッシュする。
 // ファイルを更新したら VERSION を上げること（古いキャッシュが消え、新しい版が配信される）。
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `hebrew-app-${VERSION}`;
 const FILES = [
   './',

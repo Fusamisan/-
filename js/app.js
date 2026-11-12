@@ -1,6 +1,6 @@
 import { LETTERS, WORDS, CATEGORIES } from './data.js';
 import * as store from './store.js';
-import { speak, voiceStatus, onVoicesChanged } from './speech.js';
+import { speak, voiceStatus, voiceName, onVoicesChanged } from './speech.js';
 import { WritingPad } from './writing.js';
 
 const $main = document.getElementById('main');
@@ -57,7 +57,11 @@ function viewHome() {
   // 音声一覧の読み込みを待ってから、ヘブライ語音声が本当に無いときだけ案内を出す
   const voiceNote = h('p', { class: 'note', hidden: true },
     'ヘブライ語の音声が見つかりません。iPadの「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → ヘブライ語」で音声を追加すると発音を聞けます。');
-  const updateVoiceNote = st => { voiceNote.hidden = st !== 'missing'; };
+  const voiceLabel = h('span', { class: 'muted' });
+  const updateVoiceNote = st => {
+    voiceNote.hidden = st !== 'missing';
+    voiceLabel.textContent = voiceName() || (st === 'loading' ? '読み込み中…' : 'なし');
+  };
   updateVoiceNote(voiceStatus());
   cleanup = onVoicesChanged(updateVoiceNote);
 
@@ -83,6 +87,8 @@ function viewHome() {
         h('input', { type: 'range', min: '0.5', max: '1.2', step: '0.1', value: s.settings.rate,
           oninput: e => { s.settings.rate = +e.target.value; store.save(); } }),
         h('button', { class: 'btn small', onclick: () => speak('שָׁלוֹם') }, '試す')),
+      h('p', { class: 'row small' }, '使用中の音声：', voiceLabel),
+      h('p', { class: 'muted small' }, '音が割れる・ザラつくときは、iPadの「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → ヘブライ語」で「拡張」版の音声をダウンロードすると改善することがあります。'),
       h('label', { class: 'row' },
         h('input', { type: 'checkbox', checked: s.settings.showTranslit,
           onchange: e => { s.settings.showTranslit = e.target.checked; store.save(); } }),
