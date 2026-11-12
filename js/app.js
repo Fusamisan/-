@@ -1,6 +1,6 @@
 import { LETTERS, WORDS, CATEGORIES } from './data.js';
 import * as store from './store.js';
-import { speak, canSpeak, hasHebrewVoice } from './speech.js';
+import { speak, voiceStatus, onVoicesChanged } from './speech.js';
 import { WritingPad } from './writing.js';
 
 const $main = document.getElementById('main');
@@ -54,9 +54,12 @@ function viewHome() {
   const stat = (num, label) => h('div', { class: 'stat' }, h('div', { class: 'stat-num' }, num), h('div', { class: 'stat-label' }, label));
   const tile = (href, icon, title, desc) => h('a', { class: 'tile', href }, h('div', { class: 'tile-icon' }, icon), h('div', {}, h('div', { class: 'tile-title' }, title), h('div', { class: 'tile-desc' }, desc)));
 
-  const voiceNote = canSpeak() && !hasHebrewVoice()
-    ? h('p', { class: 'note' }, 'ヘブライ語の音声が見つかりません。iPadの「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → ヘブライ語」で音声を追加すると発音を聞けます。')
-    : null;
+  // 音声一覧の読み込みを待ってから、ヘブライ語音声が本当に無いときだけ案内を出す
+  const voiceNote = h('p', { class: 'note', hidden: true },
+    'ヘブライ語の音声が見つかりません。iPadの「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → ヘブライ語」で音声を追加すると発音を聞けます。');
+  const updateVoiceNote = st => { voiceNote.hidden = st !== 'missing'; };
+  updateVoiceNote(voiceStatus());
+  cleanup = onVoicesChanged(updateVoiceNote);
 
   return h('section', { class: 'view home' },
     h('header', { class: 'hero' },
